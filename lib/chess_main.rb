@@ -6,7 +6,7 @@ require_relative '../lib/chess_move_w'
 
 game = Game.new
 print_grid(game.board)
-p coord_to_index('A1')
+p coord_to_index('B1')
 p coord_to_index('A2')
 p coord_to_index('A3')
 p coord_to_index('A4')
