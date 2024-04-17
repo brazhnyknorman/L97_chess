@@ -6,11 +6,10 @@ require_relative '../lib/chess_move_w'
 
 game = Game.new
 print_grid(game.board)
-p coord_to_index('B1')
-p coord_to_index('A2')
-p coord_to_index('A3')
-p coord_to_index('A4')
-p coord_to_index('A5')
-p coord_to_index('A6')
-p coord_to_index('A7')
-p coord_to_index('A8')
+puts "H7: #{coord_to_index('H7')}"
+puts "Valid moves: #{valid_pawn_move_w(coord_to_index('H7'), game.board.grid)}"
+
+50.times do
+  game.take_turn_w
+  print_grid(game.board)
+end
