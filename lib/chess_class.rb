@@ -17,7 +17,7 @@ class Game
     ending = coord_to_index(white_input[1])
 
     # puts "#{starting} and #{ending}"
-    # p board.grid[starting[0]][starting[1]]
+    # board.grid[starting[0]][starting[1]]
     case board.grid[starting[0]][starting[1]]
     when '.'
       puts 'Can\'t move the ground.'
@@ -29,6 +29,11 @@ class Game
         puts 'Your piece cannot move to that spot.'
       end
     when '♞'
+      if move_knight_w(starting, ending, board.grid)
+        move_piece(starting, ending, '♞')
+      else
+        puts 'Your piece cannot move to that spot.'
+      end
     when '♝'
     when '♜'
     when '♛'
@@ -91,6 +96,17 @@ class Board
       ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
       ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖']
     ]
+
+    #  [
+    #  ['.', '.', '.', '.', '.', '.', '♞', '.'],
+    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
+    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
+    #  ['.', '♟︎', '.', '♟︎', '.', '.', '.', '.'],
+    #  ['♟', '.', '.', '.', '♟︎', '.', '.', '.'],
+    #  ['.', '.', '♞', '.', '.', '.', '.', '.'],
+    #  ['.', '.', '.', '.', '♟︎', '.', '♙', '♙'],
+    #  ['.', '♞', '.', '♕', '♔', '♗', '♘', '♖']
+    #  ]
   end
 
   def create_pieces_b

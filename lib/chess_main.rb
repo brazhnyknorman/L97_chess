@@ -6,7 +6,7 @@ require_relative '../lib/chess_move_w'
 
 game = Game.new
 print_grid(game.board)
-puts "H7: #{coord_to_index('H7')}"
+puts "C3: #{coord_to_index('C3')}"
 puts "Valid moves: #{valid_pawn_move_w(coord_to_index('H7'), game.board.grid)}"
 
 50.times do
