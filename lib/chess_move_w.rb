@@ -2,6 +2,23 @@
 
 # require_relative '../lib/chess_class.rb'
 
+def king_move_w(_starting, _ending, _grid)
+  x = 1
+end
+
+def under_check?(starting, ending, grid)
+  
+end
+
+def giving_check?
+end
+
+def hypothetical_board(starting, ending, grid)
+  grid[starting[0]][starting[1]] = '.'
+  grid[ending[0]][ending[1]] = piece
+  grid
+end
+
 def move_queen_w(starting, ending, grid)
   return true if valid_queen_move_w(starting, grid).include?(ending)
 

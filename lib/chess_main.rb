@@ -13,4 +13,7 @@ print_grid(game.board)
   game.take_turn_w
   # puts "F5: #{coord_to_index('F5')}"
   print_grid(game.board)
+
+  game.take_turn_b
+  print_grid(game.board)
 end
