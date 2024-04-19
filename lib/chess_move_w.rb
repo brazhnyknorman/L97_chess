@@ -2,51 +2,54 @@
 
 # require_relative '../lib/chess_class.rb'
 
+def move_rook_w(_starting, _ending, _grid)
+  y = 1
+end
+
+def valid_rook_move_w(starting, _grid, _valid_moves = [], _pointer = starting)
+  x = 1
+end
+
 def move_bishop_w(starting, ending, grid)
   return true if valid_bishop_move_w(starting, grid).include?(ending)
 
   false
 end
 
-def valid_bishop_move_w(starting, grid, valid_moves = [], pointer = starting)
-  y_up_bound = pointer[0] >= 0
-  x_right_bound = pointer[1] <= 7
-  y_down_bound = pointer[0] <= 7
-  x_left_bound = pointer[1] >= 0
-
-  bishop_diagnol_w(starting, grid, y_up_bound, y_down_bound, x_right_bound, x_left_bound, 1, -1).each do |element|
-    valid_moves << element
-  end
-  bishop_diagnol_w(starting, grid, y_up_bound, y_down_bound, x_right_bound, x_left_bound, 1, 1).each do |element|
-    valid_moves << element
-  end
-  bishop_diagnol_w(starting, grid, y_up_bound, y_down_bound, x_right_bound, x_left_bound, -1, 1).each do |element|
-    valid_moves << element
-  end
-  bishop_diagnol_w(starting, grid, y_up_bound, y_down_bound, x_right_bound, x_left_bound, -1, -1).each do |element|
-    valid_moves << element
-  end
+def valid_bishop_move_w(pointer, grid, valid_moves = [])
+  bishop_diagnol_w(pointer, grid, 1, 1).each { |element| valid_moves << element }   # Down - Right
+  bishop_diagnol_w(pointer, grid, 1, -1).each { |element| valid_moves << element }  # Up - Right
+  bishop_diagnol_w(pointer, grid, -1, 1).each { |element| valid_moves << element }  # Down - Left
+  bishop_diagnol_w(pointer, grid, -1, -1).each { |element| valid_moves << element } # Up - Left
 
   valid_moves
 end
 
-def bishop_diagnol_w(pointer, grid, up_bound, down_bound, right_bound, left_bound, x, y) # Evaluates Up - Right Diagnol
+# Evaluate all four diagnols of the bishop
+def bishop_diagnol_w(pointer, grid, x, y)
   valid_moves = []
   y_no_valid_moves = (pointer[0] <= 0 && y == -1) || (pointer[0] >= 7 && y == 1)
   x_no_valid_moves = (pointer[1] <= 0 && x == -1) || (pointer[1] >= 7 && x == 1)
 
+  up_bound = pointer[0] < 0 && y == -1
+  right_bound = pointer[1] > 7 && x == 1
+  down_bound = pointer[0] > 7 && y == 1
+  left_bound = pointer[1] < 0 && x == -1
+
+  # Will not evaluate pointer if doing so will yield an out of bounds position
   pointer = [pointer[0] + y, pointer[1] + x] unless y_no_valid_moves || x_no_valid_moves
 
-  until (!up_bound && y == -1) || (!right_bound && x == 1) || (!down_bound && y == 1) || (!left_bound && x == -1)
+  # Will add valid moves until a black piece is capturable, bound is met or white piece is met
+  until up_bound || right_bound || down_bound || left_bound
     valid_moves << pointer unless available_w?(grid[pointer[0]][pointer[1]]) == false
 
     break if capturable_b?(grid[pointer[0]][pointer[1]]) || available_w?(grid[pointer[0]][pointer[1]]) == false
 
     pointer = [pointer[0] + y, pointer[1] + x]
-    up_bound = pointer[0] >= 0
-    right_bound = pointer[1] <= 7
-    down_bound = pointer[0] <= 7
-    left_bound = pointer[1] >= 0
+    up_bound = pointer[0] < 0 && y == -1
+    right_bound = pointer[1] > 7 && x == 1
+    down_bound = pointer[0] > 7 && y == 1
+    left_bound = pointer[1] < 0 && x == -1
   end
   valid_moves
 end
@@ -139,7 +142,7 @@ def capturable_b?(square)
 end
 
 def available_w?(square)
-  return false if '♟︎♞♝♜♛♚'.include?(square) || square.include?('♟︎')
+  return false if '♟︎♞♝♜♛♚'.include?(square)
 
   true
 end
