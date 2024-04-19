@@ -99,6 +99,11 @@ def valid_pawn_move_w(starting, grid, valid_moves = [])
                     starting[1]] # Add if empty square is available
   end
 
+  if starting[0] == 1 && (grid[starting[0] + 2][starting[1]] == '.' && starting.include?(nil) == false)
+    valid_moves << [starting[0] + 2,
+                    starting[1]] # Add move 2 spaces forward if empty square is available and it is the first move
+  end
+
   # Unless the pawn is at the end of the board, check if it can capture any pieces
   unless (starting[0] + 1) > 7
     if starting[1] > 0 && capturable_b?(grid[starting[0] + 1][starting[1] - 1])
