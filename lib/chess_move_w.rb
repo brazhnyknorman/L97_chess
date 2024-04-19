@@ -2,6 +2,55 @@
 
 # require_relative '../lib/chess_class.rb'
 
+def move_bishop_w(starting, ending, grid)
+  return true if valid_bishop_move_w(starting, grid).include?(ending)
+
+  false
+end
+
+def valid_bishop_move_w(starting, grid, valid_moves = [], pointer = starting)
+  y_up_bound = pointer[0] >= 0
+  x_right_bound = pointer[1] <= 7
+  y_down_bound = pointer[0] <= 7
+  x_left_bound = pointer[1] >= 0
+
+  bishop_diagnol_w(starting, grid, y_up_bound, y_down_bound, x_right_bound, x_left_bound, 1, -1).each do |element|
+    valid_moves << element
+  end
+  bishop_diagnol_w(starting, grid, y_up_bound, y_down_bound, x_right_bound, x_left_bound, 1, 1).each do |element|
+    valid_moves << element
+  end
+  bishop_diagnol_w(starting, grid, y_up_bound, y_down_bound, x_right_bound, x_left_bound, -1, 1).each do |element|
+    valid_moves << element
+  end
+  bishop_diagnol_w(starting, grid, y_up_bound, y_down_bound, x_right_bound, x_left_bound, -1, -1).each do |element|
+    valid_moves << element
+  end
+
+  valid_moves
+end
+
+def bishop_diagnol_w(pointer, grid, up_bound, down_bound, right_bound, left_bound, x, y) # Evaluates Up - Right Diagnol
+  valid_moves = []
+  y_no_valid_moves = (pointer[0] <= 0 && y == -1) || (pointer[0] >= 7 && y == 1)
+  x_no_valid_moves = (pointer[1] <= 0 && x == -1) || (pointer[1] >= 7 && x == 1)
+
+  pointer = [pointer[0] + y, pointer[1] + x] unless y_no_valid_moves || x_no_valid_moves
+
+  until (!up_bound && y == -1) || (!right_bound && x == 1) || (!down_bound && y == 1) || (!left_bound && x == -1)
+    valid_moves << pointer unless available_w?(grid[pointer[0]][pointer[1]]) == false
+
+    break if capturable_b?(grid[pointer[0]][pointer[1]]) || available_w?(grid[pointer[0]][pointer[1]]) == false
+
+    pointer = [pointer[0] + y, pointer[1] + x]
+    up_bound = pointer[0] >= 0
+    right_bound = pointer[1] <= 7
+    down_bound = pointer[0] <= 7
+    left_bound = pointer[1] >= 0
+  end
+  valid_moves
+end
+
 def move_knight_w(starting, ending, grid)
   return true if valid_knight_move_w(starting, grid).include?(ending)
 
@@ -85,7 +134,6 @@ def capturable_b?(square)
 end
 
 def available_w?(square)
-  p square
   return false if '♟︎♞♝♜♛♚'.include?(square) || square.include?('♟︎')
 
   true
