@@ -47,6 +47,11 @@ class Game
         puts 'Your piece cannot move to that spot'
       end
     when '♛'
+      if move_queen_w(starting, ending, board.grid)
+        move_piece(starting, ending, '♛')
+      else
+        puts 'Your piece cannot move to that spot'
+      end
     when '♚'
     else
       puts 'That is not your piece.'
