@@ -41,6 +41,11 @@ class Game
         puts 'Your piece cannot move to that spot'
       end
     when '♜'
+      if move_rook_w(starting, ending, board.grid)
+        move_piece(starting, ending, '♜')
+      else
+        puts 'Your piece cannot move to that spot'
+      end
     when '♛'
     when '♚'
     else
@@ -112,6 +117,17 @@ class Board
     #  ['.', '.', '.', '.', '♟︎', '.', '♙', '♙'],
     #  ['.', '♞', '.', '♕', '♔', '♗', '♘', '♖']
     #  ]
+
+    # [
+    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
+    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
+    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
+    #  ['.', '.', '.', '.', '♜', '.', '.', '.'],
+    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
+    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
+    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
+    #  ['.', '.', '.', '.', '.', '.', '.', '.']
+    # ]
   end
 
   def create_pieces_b

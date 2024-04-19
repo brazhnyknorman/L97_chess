@@ -2,12 +2,44 @@
 
 # require_relative '../lib/chess_class.rb'
 
-def move_rook_w(_starting, _ending, _grid)
-  y = 1
+def move_rook_w(starting, ending, grid)
+  return true if valid_rook_move_w(starting, grid).include?(ending)
+
+  false
 end
 
-def valid_rook_move_w(starting, _grid, _valid_moves = [], _pointer = starting)
-  x = 1
+def valid_rook_move_w(pointer, grid, valid_moves = [])
+  rook_axes_w(pointer, grid, 0, 1).each { |element| valid_moves << element }   # Up
+  rook_axes_w(pointer, grid, 0, -1).each { |element| valid_moves << element }  # Down
+  rook_axes_w(pointer, grid, -1, 0).each { |element| valid_moves << element }  # Left
+  rook_axes_w(pointer, grid, 1, 0).each { |element| valid_moves << element }   # Right
+
+  valid_moves
+end
+
+def rook_axes_w(pointer, grid, x, y)
+  valid_moves = []
+
+  y_no_valid_moves = (pointer[0] <= 0 && y == -1) || (pointer[0] >= 7 && y == 1)
+  x_no_valid_moves = (pointer[1] <= 0 && x == -1) || (pointer[1] >= 7 && x == 1)
+
+  y_bound = (pointer[0] < 0 && y == -1) || (pointer[0] > 7 && y == 1)
+  x_bound = (pointer[1] < 0 && x == -1) || (pointer[1] > 7 && x == 1)
+
+  # Will not evaluate pointer if doing so will yield an out of bounds position
+  pointer = [pointer[0] + y, pointer[1] + x] unless y_no_valid_moves || x_no_valid_moves
+
+  # Will add valid moves until a black piece is capturable, bound is met or white piece is met
+  until x_bound || y_bound
+    valid_moves << pointer unless available_w?(grid[pointer[0]][pointer[1]]) == false
+
+    break if capturable_b?(grid[pointer[0]][pointer[1]]) || available_w?(grid[pointer[0]][pointer[1]]) == false
+
+    pointer = [pointer[0] + y, pointer[1] + x]
+    y_bound = (pointer[0] < 0 && y == -1) || (pointer[0] > 7 && y == 1)
+    x_bound = (pointer[1] < 0 && x == -1) || (pointer[1] > 7 && x == 1)
+  end
+  valid_moves
 end
 
 def move_bishop_w(starting, ending, grid)
