@@ -24,7 +24,7 @@ def valid_king_move_w(pointer, grid, valid_moves = [])
   valid_moves
 end
 
-def print_temp(grid)
+def print_temp_w(grid)
   more_temp_grid = grid
   i = 0
   until i > 7
@@ -43,7 +43,7 @@ def king_axes_w(pointer, grid, x, y)
   valid_moves
 end
 
-def under_check?(grid, king_location_w)
+def under_check_w?(grid, king_location_w)
   grid.each_with_index do |row, y|
     row.each_with_index do |square, x|
       case square
@@ -70,7 +70,7 @@ def under_check?(grid, king_location_w)
   false
 end
 
-def hypothetical_board(starting, ending, grid, piece)
+def hypothetical_board_w(starting, ending, grid, piece)
   temp_grid = grid.map(&:dup)
   temp_grid[starting[0]][starting[1]] = '.'
   temp_grid[ending[0]][ending[1]] = piece
