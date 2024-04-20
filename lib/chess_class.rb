@@ -55,42 +55,42 @@ class Game
             move_piece(starting, ending, '♟︎')
             end_turn = true
           else
-            puts 'Your piece cannot move to that spot.'
+            puts 'Your pawn cannot move to that spot.'
           end
         when '♞'
           if move_knight_w(starting, ending, board.grid)
             move_piece(starting, ending, '♞')
             end_turn = true
           else
-            puts 'Your piece cannot move to that spot.'
+            puts 'Your knight cannot move to that spot.'
           end
         when '♝'
           if move_bishop_w(starting, ending, board.grid)
             move_piece(starting, ending, '♝')
             end_turn = true
           else
-            puts 'Your piece cannot move to that spot'
+            puts 'Your bishop cannot move to that spot'
           end
         when '♜'
           if move_rook_w(starting, ending, board.grid)
             move_piece(starting, ending, '♜')
             end_turn = true
           else
-            puts 'Your piece cannot move to that spot'
+            puts 'Your rook cannot move to that spot'
           end
         when '♛'
           if move_queen_w(starting, ending, board.grid)
             move_piece(starting, ending, '♛')
             end_turn = true
           else
-            puts 'Your piece cannot move to that spot'
+            puts 'Your queen cannot move to that spot'
           end
         when '♚'
           if king_move_w(starting, ending, board.grid)
             move_piece(starting, ending, '♚')
             end_turn = true
           else
-            puts 'Your piece cannot move to that spot'
+            puts 'Your king cannot move to that spot'
           end
         else
           puts 'That is not your piece.'
@@ -122,35 +122,35 @@ class Game
             move_piece(starting, ending, '♙')
             end_turn = true
           else
-            puts 'Your piece cannot move to that spot.'
+            puts 'Your pawn cannot move to that spot.'
           end
         when '♘'
           if move_knight_b(starting, ending, board.grid)
             move_piece(starting, ending, '♘')
             end_turn = true
           else
-            puts 'Your piece cannot move to that spot.'
+            puts 'Your knight cannot move to that spot.'
           end
         when '♗'
           if move_bishop_b(starting, ending, board.grid)
             move_piece(starting, ending, '♗')
             end_turn = true
           else
-            puts 'Your piece cannot move to that spot'
+            puts 'Your bishop cannot move to that spot'
           end
         when '♖'
           if move_rook_b(starting, ending, board.grid)
             move_piece(starting, ending, '♖')
             end_turn = true
           else
-            puts 'Your piece cannot move to that spot'
+            puts 'Your rook cannot move to that spot'
           end
         when '♕'
           if move_queen_b(starting, ending, board.grid)
             move_piece(starting, ending, '♕')
             end_turn = true
           else
-            puts 'Your piece cannot move to that spot'
+            puts 'Your queen cannot move to that spot'
           end
         when '♔'
           # king_move_w(starting, ending, board.grid)
