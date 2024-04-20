@@ -2,7 +2,8 @@
 
 require_relative '../lib/chess_move_b'
 
-def king_move_w(starting, ending, grid)
+def king_move_w(starting, ending, grid, _king_location_w)
+  p under_check?(grid, ending)
   return true if valid_king_move_w(starting, grid).include?(ending)
 
   false
@@ -29,26 +30,36 @@ def king_axes_w(pointer, grid, x, y)
   valid_moves
 end
 
-# def under_check?(grid, king_location_w)
-#  grid.each do |row|
-#    row.each_with_index do |square, index|
-#      case square
-#      when '.'
-#      when '♙'
-#        return true if move_pawn_b(index, king_location_w, grid)
-#      when '♘'
-#        return true if move_knight_b(index, king_location_w, grid)
-#      when '♗'
-#        return true if move_bishop_b(index, king_location_w, grid)
-#      when '♖'
-#        return true if move_rook_b(index, king_location_w, grid)
-#      when '♕'
-#        return true if move_queen_b(index, king_location_w, grid)
-#      when '♔'
-#      end
-#    end
-#  end
-# end
+=begin
+def under_check?(grid, king_location_w)
+  p king_location_w
+  p grid
+  grid.each do |row|
+    row.each_with_index do |square, index|
+      case square
+      when '.'
+      when '♙'
+        puts 'pawn'
+        # return true if move_pawn_b(index, king_location_w, grid)
+      when '♘'
+        puts 'knight'
+        # return true if move_knight_b(index, king_location_w, grid)
+      when '♗'
+        puts 'bishop'
+        # return true if move_bishop_b(index, king_location_w, grid)
+      when '♖'
+        puts 'rook'
+        # return true if move_rook_b(index, king_location_w, grid)
+      when '♕'
+        puts 'queen'
+        # return true if move_queen_b(index, king_location_w, grid)
+      when '♔'
+      end
+    end
+  end
+  false
+end
+=end
 
 # def giving_check?; end
 

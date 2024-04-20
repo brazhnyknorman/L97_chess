@@ -86,7 +86,7 @@ class Game
             puts 'Your queen cannot move to that spot'
           end
         when '♚'
-          if king_move_w(starting, ending, board.grid)
+          if king_move_w(starting, ending, board.grid, white_king.location)
             move_piece(starting, ending, '♚')
             end_turn = true
           else
