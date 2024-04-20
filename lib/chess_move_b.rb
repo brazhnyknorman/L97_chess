@@ -172,7 +172,7 @@ def valid_knight_move_b(starting, grid, valid_moves = [])
 end
 
 def move_pawn_b(starting, ending, grid)
-  p valid_pawn_move_b(starting, grid)
+  valid_pawn_move_b(starting, grid)
   return true if valid_pawn_move_b(starting, grid).include?(ending)
 
   false
@@ -193,6 +193,8 @@ def valid_pawn_move_b(starting, grid, valid_moves = [])
 
   # Unless the pawn is at the end of the board, check if it can capture any pieces
   unless (starting[0] - 1) < 0
+    #p 'check!'
+    #p grid[starting[0] - 1][starting[1] - 1]
     if starting[1] > 0 && capturable_w?(grid[starting[0] - 1][starting[1] - 1])
       valid_moves << [starting[0] - 1,
                       starting[1] - 1]

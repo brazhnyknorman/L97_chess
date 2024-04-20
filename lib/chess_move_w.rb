@@ -2,9 +2,11 @@
 
 require_relative '../lib/chess_move_b'
 
-def king_move_w(starting, ending, grid, _king_location_w)
-  p under_check?(grid, ending)
-  return true if valid_king_move_w(starting, grid).include?(ending)
+def king_move_w(starting, ending, grid)
+  original_board = grid.map(&:dup)
+  temp_board = hypothetical_board(starting, ending, original_board, '♚')
+  p under_check?(temp_board, ending)
+  return true if valid_king_move_w(starting, original_board).include?(ending)
 
   false
 end
@@ -19,7 +21,18 @@ def valid_king_move_w(pointer, grid, valid_moves = [])
   king_axes_w(pointer, grid, -1, -1).each { |element| valid_moves << element } # Up - Left
   king_axes_w(pointer, grid, 1, -1).each { |element| valid_moves << element }  # Up - Right
 
-  p valid_moves
+  valid_moves
+end
+
+def print_temp(grid)
+  more_temp_grid = grid
+  i = 0
+  until i > 7
+    more_temp_grid[i].each { |element| print "#{element} " }
+    print "\n"
+
+    i += 1
+  end
 end
 
 def king_axes_w(pointer, grid, x, y)
@@ -57,13 +70,14 @@ def under_check?(grid, king_location_w)
   false
 end
 
-# def giving_check?; end
+def hypothetical_board(starting, ending, grid, piece)
+  temp_grid = grid.map(&:dup)
+  temp_grid[starting[0]][starting[1]] = '.'
+  temp_grid[ending[0]][ending[1]] = piece
+  temp_grid
+end
 
-# def hypothetical_board(starting, ending, grid)
-#  grid[starting[0]][starting[1]] = '.'
-#  grid[ending[0]][ending[1]] = piece
-#  grid
-# end
+# def giving_check?; end
 
 def move_queen_w(starting, ending, grid)
   return true if valid_queen_move_w(starting, grid).include?(ending)
