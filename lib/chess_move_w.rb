@@ -63,7 +63,7 @@ def under_check_w?(grid, king_location_w)
         return true if move_rook_b(index, king_location_w, grid)
       when '♕'
         # puts 'queen'
-        # return true if move_queen_b(index, king_location_w, grid)
+        return true if move_queen_b(index, king_location_w, grid)
       when '♔'
       end
     end
