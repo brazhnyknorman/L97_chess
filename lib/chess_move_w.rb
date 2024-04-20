@@ -30,28 +30,25 @@ def king_axes_w(pointer, grid, x, y)
   valid_moves
 end
 
-=begin
 def under_check?(grid, king_location_w)
-  p king_location_w
-  p grid
-  grid.each do |row|
-    row.each_with_index do |square, index|
+  grid.each_with_index do |row, y|
+    row.each_with_index do |square, x|
       case square
       when '.'
       when '♙'
-        puts 'pawn'
-        # return true if move_pawn_b(index, king_location_w, grid)
+        return true if move_pawn_b([y, x], king_location_w, grid)
+
       when '♘'
-        puts 'knight'
+        # puts 'knight'
         # return true if move_knight_b(index, king_location_w, grid)
       when '♗'
-        puts 'bishop'
+        # puts 'bishop'
         # return true if move_bishop_b(index, king_location_w, grid)
       when '♖'
-        puts 'rook'
+        # puts 'rook'
         # return true if move_rook_b(index, king_location_w, grid)
       when '♕'
-        puts 'queen'
+        # puts 'queen'
         # return true if move_queen_b(index, king_location_w, grid)
       when '♔'
       end
@@ -59,7 +56,6 @@ def under_check?(grid, king_location_w)
   end
   false
 end
-=end
 
 # def giving_check?; end
 
@@ -85,7 +81,7 @@ def valid_queen_move_w(pointer, grid, valid_moves = [])
   axes_move_w(pointer, grid, -1, 1).each { |element| valid_moves << element }  # Down - Left
   axes_move_w(pointer, grid, -1, -1).each { |element| valid_moves << element } # Up - Left
 
-  p valid_moves
+  valid_moves
 end
 
 def move_rook_w(starting, ending, grid)
@@ -181,12 +177,13 @@ end
 
 def valid_pawn_move_w(starting, grid, valid_moves = [])
   # Unless the pawn is at the end of the board, blocked by a piece or input is invalid, add a forward move
-  unless (starting[0] + 1) > 7 || grid[starting[0] + 1][starting[1]] != '.' || starting.include?(nil)
+  not_blocked = grid[starting[0] + 1][starting[1]] == '.'
+  unless (starting[0] + 1) > 7 || !not_blocked || starting.include?(nil)
     valid_moves << [starting[0] + 1,
                     starting[1]] # Add if empty square is available
   end
 
-  if starting[0] == 1 && (grid[starting[0] + 2][starting[1]] == '.' && starting.include?(nil) == false)
+  if starting[0] == 1 && (grid[starting[0] + 2][starting[1]] == '.' && starting.include?(nil) == false) && not_blocked
     valid_moves << [starting[0] + 2,
                     starting[1]] # Add move 2 spaces forward if empty square is available and it is the first move
   end

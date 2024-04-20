@@ -83,7 +83,7 @@ def valid_queen_move_b(pointer, grid, valid_moves = [])
   axes_move_b(pointer, grid, -1, 1).each { |element| valid_moves << element }  # Down - Left
   axes_move_b(pointer, grid, -1, -1).each { |element| valid_moves << element } # Up - Left
 
-  p valid_moves
+  valid_moves
 end
 
 def move_rook_b(starting, ending, grid)
@@ -172,6 +172,7 @@ def valid_knight_move_b(starting, grid, valid_moves = [])
 end
 
 def move_pawn_b(starting, ending, grid)
+  p valid_pawn_move_b(starting, grid)
   return true if valid_pawn_move_b(starting, grid).include?(ending)
 
   false
@@ -179,12 +180,13 @@ end
 
 def valid_pawn_move_b(starting, grid, valid_moves = [])
   # Unless the pawn is at the end of the board, blocked by a piece or input is invalid, add a forward move
-  unless (starting[0] - 1) < 0 || grid[starting[0] - 1][starting[1]] != '.' || starting.include?(nil)
+  not_blocked = grid[starting[0] - 1][starting[1]] == '.'
+  unless (starting[0] - 1) < 0 || !not_blocked || starting.include?(nil)
     valid_moves << [starting[0] - 1,
                     starting[1]] # Add if empty square is available
   end
 
-  if starting[0] == 6 && (grid[starting[0] - 2][starting[1]] == '.' && starting.include?(nil) == false)
+  if starting[0] == 6 && (grid[starting[0] - 2][starting[1]] == '.' && starting.include?(nil) == false) && not_blocked
     valid_moves << [starting[0] - 2,
                     starting[1]] # Add move 2 spaces forward if empty square is available and it is the first move
   end
