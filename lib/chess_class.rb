@@ -153,11 +153,16 @@ class Game
             puts 'Your queen cannot move to that spot'
           end
         when '♔'
-          # king_move_w(starting, ending, board.grid)
+          if king_move_b(starting, ending, board.grid)
+            move_piece(starting, ending, '♔')
+            end_turn = true
+          else
+            puts 'Your king cannot move to that spot'
+          end
         else
           puts 'That is not your piece.'
         end
-        switch_turn
+        switch_turn if end_turn == true
       end
       raise_input_error = false
     end
