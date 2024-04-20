@@ -4,8 +4,8 @@ require_relative '../lib/chess_move_b'
 
 def king_move_w(starting, ending, grid)
   original_board = grid.map(&:dup)
-  temp_board = hypothetical_board(starting, ending, original_board, '♚')
-  p under_check?(temp_board, ending)
+  temp_board = hypothetical_board_w(starting, ending, original_board, '♚')
+  p under_check_w?(temp_board, ending)
   return true if valid_king_move_w(starting, original_board).include?(ending)
 
   false
@@ -46,14 +46,15 @@ end
 def under_check_w?(grid, king_location_w)
   grid.each_with_index do |row, y|
     row.each_with_index do |square, x|
+      index = [y, x]
       case square
       when '.'
       when '♙'
-        return true if move_pawn_b([y, x], king_location_w, grid)
+        return true if move_pawn_b(index, king_location_w, grid)
 
       when '♘'
         # puts 'knight'
-        # return true if move_knight_b(index, king_location_w, grid)
+        return true if move_knight_b(index, king_location_w, grid)
       when '♗'
         # puts 'bishop'
         # return true if move_bishop_b(index, king_location_w, grid)
