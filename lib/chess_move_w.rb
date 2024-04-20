@@ -1,23 +1,62 @@
 # frozen_string_literal: false
 
-# require_relative '../lib/chess_class.rb'
+require_relative '../lib/chess_move_b'
 
-def king_move_w(_starting, _ending, _grid)
-  x = 1
+def king_move_w(starting, ending, grid)
+  return true if valid_king_move_w(starting, grid).include?(ending)
+
+  false
 end
 
-def under_check?(starting, ending, grid)
-  
+def valid_king_move_w(pointer, grid, valid_moves = [])
+  king_axes_w(pointer, grid, 0, -1).each { |element| valid_moves << element }  # Up
+  king_axes_w(pointer, grid, 0, 1).each { |element| valid_moves << element }   # Down
+  king_axes_w(pointer, grid, 1, 0).each { |element| valid_moves << element }   # Right
+  king_axes_w(pointer, grid, -1, 0).each { |element| valid_moves << element }  # Left
+  king_axes_w(pointer, grid, 1, 1).each { |element| valid_moves << element }   # Down - Right
+  king_axes_w(pointer, grid, -1, 1).each { |element| valid_moves << element }  # Down - Left
+  king_axes_w(pointer, grid, -1, -1).each { |element| valid_moves << element } # Up - Left
+  king_axes_w(pointer, grid, 1, -1).each { |element| valid_moves << element }  # Up - Right
+
+  p valid_moves
 end
 
-def giving_check?
+def king_axes_w(pointer, grid, x, y)
+  in_bound = (pointer[0] + y).between?(0, 7) && (pointer[1] + x).between?(0, 7)
+  valid_moves = []
+
+  valid_moves << [pointer[0] + y, pointer[1] + x] if in_bound && available_w?(grid[pointer[0] + y][pointer[1] + x])
+  valid_moves
 end
 
-def hypothetical_board(starting, ending, grid)
-  grid[starting[0]][starting[1]] = '.'
-  grid[ending[0]][ending[1]] = piece
-  grid
-end
+# def under_check?(grid, king_location_w)
+#  grid.each do |row|
+#    row.each_with_index do |square, index|
+#      case square
+#      when '.'
+#      when '♙'
+#        return true if move_pawn_b(index, king_location_w, grid)
+#      when '♘'
+#        return true if move_knight_b(index, king_location_w, grid)
+#      when '♗'
+#        return true if move_bishop_b(index, king_location_w, grid)
+#      when '♖'
+#        return true if move_rook_b(index, king_location_w, grid)
+#      when '♕'
+#        return true if move_queen_b(index, king_location_w, grid)
+#      when '♔'
+#      end
+#    end
+#  end
+# end
+
+# def giving_check?; end
+
+# def hypothetical_board(starting, ending, grid)
+#  grid[starting[0]][starting[1]] = '.'
+#  grid[ending[0]][ending[1]] = piece
+#  grid
+# end
 
 def move_queen_w(starting, ending, grid)
   return true if valid_queen_move_w(starting, grid).include?(ending)
@@ -87,27 +126,6 @@ def axes_move_w(pointer, grid, x, y)
   end
   valid_moves
 end
-
-# Evaluate all four diagnols of the bishop
-# def bishop_diagnol_w(pointer, grid, x, y)
-#  valid_moves = []
-#
-#  y_no_valid_moves = (pointer[0] <= 0 && y == -1) || (pointer[0] >= 7 && y == 1)
-#  x_no_valid_moves = (pointer[1] <= 0 && x == -1) || (pointer[1] >= 7 && x == 1)
-#
-#  # Will not evaluate pointer if doing so will yield an out of bounds position
-#  pointer = [pointer[0] + y, pointer[1] + x] unless y_no_valid_moves || x_no_valid_moves
-#
-#  # Will add valid moves until a black piece is capturable, bound is met or white piece is met
-#  until (pointer[0].between?(0, 7) == false) || (pointer[1].between?(0, 7) == false)
-#    valid_moves << pointer unless available_w?(grid[pointer[0]][pointer[1]]) == false
-#
-#    break if capturable_b?(grid[pointer[0]][pointer[1]]) || available_w?(grid[pointer[0]][pointer[1]]) == false
-#
-#    pointer = [pointer[0] + y, pointer[1] + x]
-#  end
-#  valid_moves
-# end
 
 def move_knight_w(starting, ending, grid)
   return true if valid_knight_move_w(starting, grid).include?(ending)

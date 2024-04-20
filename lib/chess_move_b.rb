@@ -1,6 +1,6 @@
 # frozen_string_literal: false
 
-# require_relative '../lib/chess_class.rb'
+require_relative '../lib/chess_move_w'
 
 def king_move_w(_starting, _ending, _grid)
   x = 1
@@ -81,7 +81,7 @@ def axes_move_b(pointer, grid, x, y)
   until (pointer[0].between?(0, 7) == false) || (pointer[1].between?(0, 7) == false)
     valid_moves << pointer unless available_b?(grid[pointer[0]][pointer[1]]) == false
 
-    break if capturable_w?(grid[pointer[0]][pointer[1]]) || available_b?(grid[pointer[0]][pointer[1]]) == false
+    break if capturable_b?(grid[pointer[0]][pointer[1]]) || available_b?(grid[pointer[0]][pointer[1]]) == false
 
     pointer = [pointer[0] + y, pointer[1] + x]
   end

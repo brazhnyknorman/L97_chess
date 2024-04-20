@@ -5,13 +5,33 @@ require_relative '../lib/chess_move_b'
 
 # Class that creates and operates a game of chess
 class Game
-  attr_accessor :board, :turn, :end_turn, :raise_input_error
+  attr_accessor :board, :turn, :end_turn, :raise_input_error, :white_king, :black_king
 
   def initialize
     @board = Board.new
     @turn = 'white'
     @end_turn = false
     @raise_input_error = false
+    @white_king = WhiteKing.new([0, 4])
+    @black_king = BlackKing.new([7, 4])
+  end
+
+  class WhiteKing
+    attr_accessor :location, :under_check
+
+    def initialize(starting)
+      @location = starting
+      @under_check = false
+    end
+  end
+
+  class BlackKing
+    attr_accessor :location, :under_check
+
+    def initialize(starting)
+      @location = starting
+      @under_check = false
+    end
   end
 
   def take_turn_w
@@ -66,10 +86,16 @@ class Game
             puts 'Your piece cannot move to that spot'
           end
         when '♚'
+          if king_move_w(starting, ending, board.grid)
+            move_piece(starting, ending, '♚')
+            end_turn = true
+          else
+            puts 'Your piece cannot move to that spot'
+          end
         else
           puts 'That is not your piece.'
         end
-        switch_turn
+        switch_turn if end_turn == true
       end
       raise_input_error = false
     end
@@ -127,6 +153,7 @@ class Game
             puts 'Your piece cannot move to that spot'
           end
         when '♔'
+          # king_move_w(starting, ending, board.grid)
         else
           puts 'That is not your piece.'
         end
