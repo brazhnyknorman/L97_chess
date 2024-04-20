@@ -2,9 +2,22 @@
 
 require_relative '../lib/chess_move_w'
 
-def king_move_b(starting, ending, grid, _king_location_w)
-  p under_check?(grid, ending)
-  return true if valid_king_move_b(starting, grid).include?(ending)
+def king_move_b(starting, ending, grid, check_if_opponent_is_checked)
+  original_board = grid.map(&:dup)
+  temp_board = hypothetical_board_b(starting, ending, original_board, '♚')
+  puts ''
+  print_temp_b(original_board)
+  puts 'Temp:'
+  print_temp_b(temp_board)
+
+  if check_if_opponent_is_checked == true
+    currently_under_check = under_check_b?(original_board, starting, false)
+    will_be_under_check = under_check_b?(temp_board, ending, false)
+    puts "Will be under check: #{will_be_under_check}"
+  else
+    will_be_under_check = false
+  end
+  return true if valid_king_move_b(starting, original_board).include?(ending) && will_be_under_check == false
 
   false
 end
@@ -19,7 +32,18 @@ def valid_king_move_b(pointer, grid, valid_moves = [])
   king_axes_b(pointer, grid, -1, -1).each { |element| valid_moves << element } # Up - Left
   king_axes_b(pointer, grid, 1, -1).each { |element| valid_moves << element }  # Up - Right
 
-  p valid_moves
+  valid_moves
+end
+
+def print_temp_b(grid)
+  more_temp_grid = grid
+  i = 0
+  until i > 7
+    more_temp_grid[i].each { |element| print "#{element} " }
+    print "\n"
+
+    i += 1
+  end
 end
 
 def king_axes_b(pointer, grid, x, y)
@@ -30,42 +54,36 @@ def king_axes_b(pointer, grid, x, y)
   valid_moves
 end
 
-# def under_check?(grid, king_location_w)
-#   p king_location_w
-#   p grid
-#   grid.each do |row|
-#     row.each_with_index do |square, index|
-#       case square
-#       when '.'
-#       when '♙'
-#         puts 'pawn'
-#         # return true if move_pawn_b(index, king_location_w, grid)
-#       when '♘'
-#         puts 'knight'
-#         # return true if move_knight_b(index, king_location_w, grid)
-#       when '♗'
-#         puts 'bishop'
-#         # return true if move_bishop_b(index, king_location_w, grid)
-#       when '♖'
-#         puts 'rook'
-#         # return true if move_rook_b(index, king_location_w, grid)
-#       when '♕'
-#         puts 'queen'
-#         # return true if move_queen_b(index, king_location_w, grid)
-#       when '♔'
-#       end
-#     end
-#   end
-#   false
-# end
+def under_check_b?(grid, king_location_w, check_if_opponent_is_checked)
+  grid.each_with_index do |row, y|
+    row.each_with_index do |square, x|
+      index = [y, x]
+      case square
+      when '.'
+      when '♟︎'
+        return true if move_pawn_w(index, king_location_w, grid)
+      when '♞'
+        return true if move_knight_w(index, king_location_w, grid)
+      when '♝'
+        return true if move_bishop_w(index, king_location_w, grid)
+      when '♜'
+        return true if move_rook_w(index, king_location_w, grid)
+      when '♛'
+        return true if move_queen_w(index, king_location_w, grid)
+      when '♚'
+        return true if king_move_w(index, king_location_w, grid, check_if_opponent_is_checked)
+      end
+    end
+  end
+  false
+end
 
-# def giving_check?; end
-
-# def hypothetical_board(starting, ending, grid)
-#  grid[starting[0]][starting[1]] = '.'
-#  grid[ending[0]][ending[1]] = piece
-#  grid
-# end
+def hypothetical_board_b(starting, ending, grid, piece)
+  temp_grid = grid.map(&:dup)
+  temp_grid[starting[0]][starting[1]] = '.' unless starting == ending
+  temp_grid[ending[0]][ending[1]] = piece
+  temp_grid
+end
 
 def move_queen_b(starting, ending, grid)
   return true if valid_queen_move_b(starting, grid).include?(ending)
@@ -172,7 +190,6 @@ def valid_knight_move_b(starting, grid, valid_moves = [])
 end
 
 def move_pawn_b(starting, ending, grid)
-  valid_pawn_move_b(starting, grid)
   return true if valid_pawn_move_b(starting, grid).include?(ending)
 
   false
@@ -180,7 +197,8 @@ end
 
 def valid_pawn_move_b(starting, grid, valid_moves = [])
   # Unless the pawn is at the end of the board, blocked by a piece or input is invalid, add a forward move
-  not_blocked = grid[starting[0] - 1][starting[1]] == '.'
+  border = starting[0] <= 0
+  not_blocked = border == false && grid[starting[0] - 1][starting[1]] == '.'
   unless (starting[0] - 1) < 0 || !not_blocked || starting.include?(nil)
     valid_moves << [starting[0] - 1,
                     starting[1]] # Add if empty square is available
@@ -193,8 +211,6 @@ def valid_pawn_move_b(starting, grid, valid_moves = [])
 
   # Unless the pawn is at the end of the board, check if it can capture any pieces
   unless (starting[0] - 1) < 0
-    #p 'check!'
-    #p grid[starting[0] - 1][starting[1] - 1]
     if starting[1] > 0 && capturable_w?(grid[starting[0] - 1][starting[1] - 1])
       valid_moves << [starting[0] - 1,
                       starting[1] - 1]

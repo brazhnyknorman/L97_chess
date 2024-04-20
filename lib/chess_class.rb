@@ -36,6 +36,10 @@ class Game
 
   def take_turn_w
     end_turn = false
+    if under_check_w?(board.grid, white_king.location, false)
+      white_king.under_check = true
+      puts "\nYou are under check!"
+    end
     until end_turn == true
       white_input = take_input
       begin
@@ -86,8 +90,10 @@ class Game
             puts 'Your queen cannot move to that spot'
           end
         when '♚'
-          if king_move_w(starting, ending, board.grid)
+          if king_move_w(starting, ending, board.grid, true)
             move_piece(starting, ending, '♚')
+            white_king.location = ending
+            white_king.under_check = false
             end_turn = true
           else
             puts 'Your king cannot move to that spot'
@@ -103,6 +109,10 @@ class Game
 
   def take_turn_b
     end_turn = false
+    if under_check_b?(board.grid, black_king.location, false)
+      black_king.under_check = true
+      puts "\nYou are under check!"
+    end
     until end_turn == true
       black_input = take_input
       begin
@@ -153,8 +163,10 @@ class Game
             puts 'Your queen cannot move to that spot'
           end
         when '♔'
-          if king_move_b(starting, ending, board.grid)
+          if king_move_b(starting, ending, board.grid, true)
             move_piece(starting, ending, '♔')
+            black_king.location = ending
+            black_king.under_check = false
             end_turn = true
           else
             puts 'Your king cannot move to that spot'
@@ -174,6 +186,8 @@ class Game
             else
               'white'
             end
+    black_king.under_check = false
+    white_king.under_check = false
   end
 
   def take_input

@@ -9,7 +9,7 @@ print_grid(game.board)
 # puts "C3: #{coord_to_index('C3')}"
 # puts "Valid moves: #{valid_pawn_move_w(coord_to_index('H7'), game.board.grid)}"
 
-50.times do
+5000.times do
   game.take_turn_w
   # puts "F5: #{coord_to_index('F5')}"
   print_grid(game.board)
