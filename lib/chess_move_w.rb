@@ -2,7 +2,7 @@
 
 require_relative '../lib/chess_move_b'
 
-def king_move_w(starting, ending, grid, check_if_opponent_is_checked)
+def king_move_w(starting, ending, grid, _check_if_opponent_is_checked)
   original_board = grid.map(&:dup)
   temp_board = hypothetical_board_w(starting, ending, original_board, '♚')
 
@@ -68,6 +68,29 @@ def under_check_w?(grid, king_location_w, _check_if_opponent_is_checked)
     end
   end
   false
+end
+
+def can_be_saved_w?(grid, king_location_w)
+  grid.each_with_index do |row, y|
+    row.each_with_index do |square, x|
+      index = [y, x]
+      case square
+      when '.'
+      when '♟︎'
+        valid_pawn_move_w(index, grid).each do |valid_pawn_move|
+          pawn_grid = hypothetical_board_w(index, valid_pawn_move, grid, square)
+          return false if under_check_w?(pawn_grid, king_location_w, false) == false
+        end
+      when '♞'
+      when '♝'
+      when '♜'
+      when '♛'
+      when '♚'
+      end
+    end
+  end
+
+  true
 end
 
 def hypothetical_board_w(starting, ending, grid, piece)

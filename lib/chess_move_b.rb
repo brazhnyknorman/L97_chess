@@ -63,10 +63,6 @@ def under_check_b?(grid, king_location_w, _check_if_opponent_is_checked)
       when '♛'
         return true if move_queen_w(index, king_location_w, grid)
       when '♚'
-        # puts 'King'
-        # p index
-        # p king_location_w
-        # p valid_king_move_w(index, grid)
         return true if valid_king_move_w(index, grid).include?(king_location_w)
       end
     end
