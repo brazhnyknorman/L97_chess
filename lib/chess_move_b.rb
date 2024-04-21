@@ -2,21 +2,13 @@
 
 require_relative '../lib/chess_move_w'
 
-def king_move_b(starting, ending, grid, check_if_opponent_is_checked)
+def king_move_b(starting, ending, grid, _check_if_opponent_is_checked)
   original_board = grid.map(&:dup)
-  temp_board = hypothetical_board_b(starting, ending, original_board, '♚')
-  puts ''
-  print_temp_b(original_board)
-  puts 'Temp:'
-  print_temp_b(temp_board)
+  temp_board = hypothetical_board_b(starting, ending, original_board, '♔') # DO NOT FORGET TO UPDATE PIECE
 
-  if check_if_opponent_is_checked == true
-    currently_under_check = under_check_b?(original_board, starting, false)
-    will_be_under_check = under_check_b?(temp_board, ending, false)
-    puts "Will be under check: #{will_be_under_check}"
-  else
-    will_be_under_check = false
-  end
+  currently_under_check = under_check_b?(original_board, starting, false)
+  will_be_under_check = under_check_b?(temp_board, ending, false)
+
   return true if valid_king_move_b(starting, original_board).include?(ending) && will_be_under_check == false
 
   false
@@ -54,7 +46,7 @@ def king_axes_b(pointer, grid, x, y)
   valid_moves
 end
 
-def under_check_b?(grid, king_location_w, check_if_opponent_is_checked)
+def under_check_b?(grid, king_location_w, _check_if_opponent_is_checked)
   grid.each_with_index do |row, y|
     row.each_with_index do |square, x|
       index = [y, x]
@@ -71,7 +63,11 @@ def under_check_b?(grid, king_location_w, check_if_opponent_is_checked)
       when '♛'
         return true if move_queen_w(index, king_location_w, grid)
       when '♚'
-        return true if king_move_w(index, king_location_w, grid, check_if_opponent_is_checked)
+        # puts 'King'
+        # p index
+        # p king_location_w
+        # p valid_king_move_w(index, grid)
+        return true if valid_king_move_w(index, grid).include?(king_location_w)
       end
     end
   end
@@ -80,7 +76,7 @@ end
 
 def hypothetical_board_b(starting, ending, grid, piece)
   temp_grid = grid.map(&:dup)
-  temp_grid[starting[0]][starting[1]] = '.' unless starting == ending
+  temp_grid[starting[0]][starting[1]] = '.'
   temp_grid[ending[0]][ending[1]] = piece
   temp_grid
 end

@@ -6,13 +6,9 @@ def king_move_w(starting, ending, grid, check_if_opponent_is_checked)
   original_board = grid.map(&:dup)
   temp_board = hypothetical_board_w(starting, ending, original_board, '♚')
 
-  if check_if_opponent_is_checked == true
-    currently_under_check = under_check_w?(original_board, starting, false)
-    will_be_under_check = under_check_w?(temp_board, ending, false)
-    puts "Will be under check: #{will_be_under_check}"
-  else
-    will_be_under_check = false
-  end
+  currently_under_check = under_check_w?(original_board, starting, false)
+  will_be_under_check = under_check_w?(temp_board, ending, false)
+
   return true if valid_king_move_w(starting, original_board).include?(ending) && will_be_under_check == false
 
   false
@@ -67,15 +63,7 @@ def under_check_w?(grid, king_location_w, _check_if_opponent_is_checked)
       when '♕'
         return true if move_queen_b(index, king_location_w, grid)
       when '♔'
-        # return true if king_move_b(index, king_location_w, grid, check_if_opponent_is_checked)
-        return true if king_axes_w(index, grid, 0, 1).include?(king_location_w) # Down
-        return true if king_axes_w(index, grid, 0, -1).include?(king_location_w) # Up
-        return true if king_axes_w(index, grid, 1, 0).include?(king_location_w) # Right
-        return true if king_axes_w(index, grid, -1, 0).include?(king_location_w) # Left
-        return true if king_axes_w(index, grid, 1, 1).include?(king_location_w) # Down - Right
-        return true if king_axes_w(index, grid, -1, 1).include?(king_location_w) # Up - Right
-        return true if king_axes_w(index, grid, -1, -1).include?(king_location_w) # Up - Left
-        return true if king_axes_w(index, grid, 1, -1).include?(king_location_w) # Down - Left
+        return true if valid_king_move_b(index, grid).include?(king_location_w)
       end
     end
   end
