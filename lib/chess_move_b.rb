@@ -70,6 +70,50 @@ def under_check_b?(grid, king_location_w, _check_if_opponent_is_checked)
   false
 end
 
+def under_checkmate_b?(grid, king_location_b)
+  grid.each_with_index do |row, y|
+    row.each_with_index do |square, x|
+      index = [y, x]
+      case square
+      when '.'
+      when '♙'
+        valid_pawn_move_b(index, grid).each do |possible_pawn_move|
+          return false if saveable_move_b?(grid, king_location_b, index, possible_pawn_move, square) == true
+        end
+      when '♘'
+        valid_knight_move_b(index, grid).each do |possible_knight_move|
+          return false if saveable_move_b?(grid, king_location_b, index, possible_knight_move, square) == true
+        end
+      when '♗'
+        valid_bishop_move_b(index, grid).each do |possible_bishop_move|
+          return false if saveable_move_b?(grid, king_location_b, index, possible_bishop_move, square) == true
+        end
+      when '♖'
+        valid_rook_move_b(index, grid).each do |possible_rook_move|
+          return false if saveable_move_b?(grid, king_location_b, index, possible_rook_move, square) == true
+        end
+      when '♕'
+        valid_queen_move_b(index, grid).each do |possible_queen_move|
+          return false if saveable_move_b?(grid, king_location_b, index, possible_queen_move, square) == true
+        end
+      when '♔'
+        valid_king_move_b(index, grid).each do |possible_king_move|
+          puts 'uh oh...'
+          return false if king_move_b(index, possible_king_move, grid, false) == true
+        end
+      end
+    end
+  end
+
+  true # Return true if king has no valid moves and cannot be saved by same colored pieces
+end
+
+def saveable_move_b?(grid, king_location, index, possible_move, square)
+  temp_grid = hypothetical_board_b(index, possible_move, grid, square)
+  puts "Square: #{square} status: #{under_check_b?(temp_grid, king_location, false) == false}"
+  true if under_check_b?(temp_grid, king_location, false) == false
+end
+
 def hypothetical_board_b(starting, ending, grid, piece)
   temp_grid = grid.map(&:dup)
   temp_grid[starting[0]][starting[1]] = '.'

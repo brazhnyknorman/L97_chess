@@ -38,8 +38,9 @@ class Game
     end_turn = false
     if under_check_w?(board.grid, white_king.location, false)
       white_king.under_check = true
+      game_over if under_checkmate_w?(original_board = board.grid(&:dup), white_king.location) == true
+
       puts "\nYou are under check!"
-      p cant_be_saved_w?(original_board = board.grid(&:dup), white_king.location)
     end
     until end_turn == true
       white_input = take_input
@@ -56,35 +57,35 @@ class Game
         when '.'
           puts 'Can\'t move the ground.'
         when '♟︎'
-          if move_pawn_w(starting, ending, board.grid)
+          if move_pawn_w(starting, ending, board.grid, white_king.location)
             move_piece(starting, ending, '♟︎')
             end_turn = true
           else
             puts 'Your pawn cannot move to that spot.'
           end
         when '♞'
-          if move_knight_w(starting, ending, board.grid)
+          if move_knight_w(starting, ending, board.grid, white_king.location)
             move_piece(starting, ending, '♞')
             end_turn = true
           else
             puts 'Your knight cannot move to that spot.'
           end
         when '♝'
-          if move_bishop_w(starting, ending, board.grid)
+          if move_bishop_w(starting, ending, board.grid, white_king.location)
             move_piece(starting, ending, '♝')
             end_turn = true
           else
             puts 'Your bishop cannot move to that spot'
           end
         when '♜'
-          if move_rook_w(starting, ending, board.grid)
+          if move_rook_w(starting, ending, board.grid, white_king.location)
             move_piece(starting, ending, '♜')
             end_turn = true
           else
             puts 'Your rook cannot move to that spot'
           end
         when '♛'
-          if move_queen_w(starting, ending, board.grid)
+          if move_queen_w(starting, ending, board.grid, white_king.location)
             move_piece(starting, ending, '♛')
             end_turn = true
           else
@@ -112,6 +113,8 @@ class Game
     end_turn = false
     if under_check_b?(board.grid, black_king.location, false)
       black_king.under_check = true
+      game_over if under_checkmate_b?(original_board = board.grid(&:dup), black_king.location) == true
+
       puts "\nYou are under check!"
     end
     until end_turn == true
@@ -211,6 +214,12 @@ class Game
     board.grid[starting[0]][starting[1]] = '.'
     board.grid[ending[0]][ending[1]] = piece
   end
+
+  def game_over
+    switch_turn
+    puts "\n#{@turn.capitalize} wins!"
+    exit
+  end
 end
 
 # Instance of a chess board, which contains indices of chess pieces
@@ -252,12 +261,12 @@ class Board
 
     # [
     #  ['.', '.', '.', '.', '♚', '.', '.', '.'],
+    #  ['.', '.', '.', '.', '♟︎', '.', '.', '.'],
+    #  ['.', '.', '.', '.', '.', '♕', '.', '.'],
     #  ['.', '.', '.', '.', '.', '.', '.', '.'],
     #  ['.', '.', '.', '.', '.', '.', '.', '.'],
     #  ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
+    #  ['.', '.', '.', '.', '♕', '.', '.', '.'],
     #  ['.', '.', '.', '.', '♔', '.', '.', '.']
     # ]
   end
