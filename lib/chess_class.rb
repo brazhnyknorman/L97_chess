@@ -35,6 +35,7 @@ class Game
   end
 
   def take_turn_w
+    turn = 'white'
     end_turn = false
     if under_check_w?(board.grid, white_king.location)
       white_king.under_check = true
@@ -106,6 +107,7 @@ class Game
   end
 
   def take_turn_b
+    turn = 'black'
     end_turn = false
     if under_check_b?(board.grid, black_king.location)
       black_king.under_check = true
@@ -228,6 +230,40 @@ class Game
     switch_turn
     puts "\n#{@turn.capitalize} wins!"
     exit
+  end
+
+  def save_game
+    current_directory = File.dirname(__FILE__) # Get the current directory of the script
+    saves_directory = File.join(current_directory, '..', 'saves') # Navigate one directory up to create 'saves'
+
+    Dir.mkdir(saves_directory) unless Dir.exist?(saves_directory) # Make saves dir unless directory already exists
+
+    file_path = File.join(saves_directory, 'save.dat')
+
+    File.open(file_path, 'wb') do |file|
+      Marshal.dump(self, file)
+    end
+  end
+
+  def load_game
+    current_directory = File.dirname(__FILE__) # Get the current directory of the script
+    file_path = File.join(current_directory, '..', 'saves', 'save.dat') # Navigate one directory up to 'saves'
+
+    if File.exist?(file_path)
+      File.open(file_path, 'rb') do |file|
+        loaded_game = Marshal.load(file)
+
+        # Assign loaded attributes to the current game instance
+        @board = loaded_game.board
+        @turn = loaded_game.turn
+        @end_turn = loaded_game.end_turn
+        @raise_input_error = loaded_game.raise_input_error
+        @white_king = loaded_game.white_king
+        @black_king = loaded_game.black_king
+      end
+    else
+      puts 'No saved game found.'
+    end
   end
 end
 
