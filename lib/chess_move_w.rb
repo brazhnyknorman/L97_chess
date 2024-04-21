@@ -70,27 +70,48 @@ def under_check_w?(grid, king_location_w, _check_if_opponent_is_checked)
   false
 end
 
-def can_be_saved_w?(grid, king_location_w)
+def cant_be_saved_w?(grid, king_location_w)
   grid.each_with_index do |row, y|
     row.each_with_index do |square, x|
       index = [y, x]
       case square
       when '.'
       when '♟︎'
-        valid_pawn_move_w(index, grid).each do |valid_pawn_move|
-          pawn_grid = hypothetical_board_w(index, valid_pawn_move, grid, square)
-          return false if under_check_w?(pawn_grid, king_location_w, false) == false
+        valid_pawn_move_w(index, grid).each do |possible_pawn_move|
+          # pawn_grid = hypothetical_board_w(index, possible_pawn_move, grid, square)
+          # under_check_w?(pawn_grid, king_location_w, false) == false
+          return false if saveable_move_w?(grid, king_location_w, index, possible_pawn_move, square) == true
         end
       when '♞'
+        valid_knight_move_w(index, grid).each do |possible_knight_move|
+          # knight_grid = hypothetical_board_w(index, possible_knight_move, grid, square)
+          # return false if under_check_w?(knight_grid, king_location_w, false) == false
+          return false if saveable_move_w?(grid, king_location_w, index, possible_knight_move, square) == true
+        end
       when '♝'
+        valid_bishop_move_w(index, grid).each do |possible_bishop_move|
+          return false if saveable_move_w?(grid, king_location_w, index, possible_bishop_move, square) == true
+        end
       when '♜'
+        valid_rook_move_w(index, grid).each do |possible_rook_move|
+          return false if saveable_move_w?(grid, king_location_w, index, possible_rook_move, square) == true
+        end
       when '♛'
+        valid_queen_move_w(index, grid).each do |possible_queen_move|
+          return false if saveable_move_w?(grid, king_location_w, index, possible_queen_move, square) == true
+        end
       when '♚'
       end
     end
   end
 
   true
+end
+
+def saveable_move_w?(grid, king_location, index, possible_move, square)
+  temp_grid = hypothetical_board_w(index, possible_move, grid, square)
+  puts "Status for #{square}: #{under_check_w?(temp_grid, king_location, false) == false}"
+  true if under_check_w?(temp_grid, king_location, false) == false
 end
 
 def hypothetical_board_w(starting, ending, grid, piece)

@@ -39,7 +39,7 @@ class Game
     if under_check_w?(board.grid, white_king.location, false)
       white_king.under_check = true
       puts "\nYou are under check!"
-      p can_be_saved_w?(original_board = board.grid(&:dup), white_king.location)
+      p cant_be_saved_w?(original_board = board.grid(&:dup), white_king.location)
     end
     until end_turn == true
       white_input = take_input
@@ -251,14 +251,14 @@ class Board
     #  ]
 
     # [
+    #  ['.', '.', '.', '.', '♚', '.', '.', '.'],
     #  ['.', '.', '.', '.', '.', '.', '.', '.'],
     #  ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #  ['.', '.', '.', '.', '.', '♚', '.', '.'],
-    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #  ['.', '.', '.', '.', '♔', '.', '.', '.'],
     #  ['.', '.', '.', '.', '.', '.', '.', '.'],
     #  ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #  ['.', '.', '.', '.', '.', '.', '.', '.']
+    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
+    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
+    #  ['.', '.', '.', '.', '♔', '.', '.', '.']
     # ]
   end
 
