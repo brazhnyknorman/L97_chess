@@ -12,8 +12,8 @@ class Game
     @turn = 'white'
     @end_turn = false
     @raise_input_error = false
-    @white_king = WhiteKing.new([0, 4])
-    @black_king = BlackKing.new([7, 4])
+    @white_king = WhiteKing.new([0, 3])
+    @black_king = BlackKing.new([7, 3])
   end
 
   class WhiteKing
@@ -36,7 +36,7 @@ class Game
 
   def take_turn_w
     end_turn = false
-    if under_check_w?(board.grid, white_king.location, false)
+    if under_check_w?(board.grid, white_king.location)
       white_king.under_check = true
       game_over if under_checkmate_w?(original_board = board.grid(&:dup), white_king.location) == true
 
@@ -53,50 +53,46 @@ class Game
       end
 
       unless raise_input_error == true
-        case board.grid[starting[0]][starting[1]]
+        piece = board.grid[starting[0]][starting[1]]
+        case piece
         when '.'
           puts 'Can\'t move the ground.'
         when '♟︎'
           if move_pawn_w(starting, ending, board.grid, white_king.location)
-            move_piece(starting, ending, '♟︎')
-            end_turn = true
+            end_turn = move_piece(starting, ending, piece)
+            promote_pawn(ending, piece)
           else
             puts 'Your pawn cannot move to that spot.'
           end
         when '♞'
           if move_knight_w(starting, ending, board.grid, white_king.location)
-            move_piece(starting, ending, '♞')
-            end_turn = true
+            end_turn = move_piece(starting, ending, piece)
           else
             puts 'Your knight cannot move to that spot.'
           end
         when '♝'
           if move_bishop_w(starting, ending, board.grid, white_king.location)
-            move_piece(starting, ending, '♝')
-            end_turn = true
+            end_turn = move_piece(starting, ending, piece)
           else
             puts 'Your bishop cannot move to that spot'
           end
         when '♜'
           if move_rook_w(starting, ending, board.grid, white_king.location)
-            move_piece(starting, ending, '♜')
-            end_turn = true
+            end_turn = move_piece(starting, ending, piece)
           else
             puts 'Your rook cannot move to that spot'
           end
         when '♛'
           if move_queen_w(starting, ending, board.grid, white_king.location)
-            move_piece(starting, ending, '♛')
-            end_turn = true
+            end_turn = move_piece(starting, ending, piece)
           else
             puts 'Your queen cannot move to that spot'
           end
         when '♚'
-          if king_move_w(starting, ending, board.grid, true)
-            move_piece(starting, ending, '♚')
+          if king_move_w(starting, ending, board.grid)
+            end_turn = move_piece(starting, ending, piece)
             white_king.location = ending
             white_king.under_check = false
-            end_turn = true
           else
             puts 'Your king cannot move to that spot'
           end
@@ -111,7 +107,7 @@ class Game
 
   def take_turn_b
     end_turn = false
-    if under_check_b?(board.grid, black_king.location, false)
+    if under_check_b?(board.grid, black_king.location)
       black_king.under_check = true
       game_over if under_checkmate_b?(original_board = board.grid(&:dup), black_king.location) == true
 
@@ -128,50 +124,46 @@ class Game
       end
 
       unless raise_input_error == true
-        case board.grid[starting[0]][starting[1]]
+        piece = board.grid[starting[0]][starting[1]]
+        case piece
         when '.'
           puts 'Can\'t move the ground.'
         when '♙'
-          if move_pawn_b(starting, ending, board.grid)
-            move_piece(starting, ending, '♙')
-            end_turn = true
+          if move_pawn_b(starting, ending, board.grid, black_king.location)
+            end_turn = move_piece(starting, ending, piece)
+            promote_pawn(ending, piece)
           else
             puts 'Your pawn cannot move to that spot.'
           end
         when '♘'
-          if move_knight_b(starting, ending, board.grid)
-            move_piece(starting, ending, '♘')
-            end_turn = true
+          if move_knight_b(starting, ending, board.grid, black_king.location)
+            end_turn = move_piece(starting, ending, piece)
           else
             puts 'Your knight cannot move to that spot.'
           end
         when '♗'
-          if move_bishop_b(starting, ending, board.grid)
-            move_piece(starting, ending, '♗')
-            end_turn = true
+          if move_bishop_b(starting, ending, board.grid, black_king.location)
+            end_turn = move_piece(starting, ending, piece)
           else
             puts 'Your bishop cannot move to that spot'
           end
         when '♖'
-          if move_rook_b(starting, ending, board.grid)
-            move_piece(starting, ending, '♖')
-            end_turn = true
+          if move_rook_b(starting, ending, board.grid, black_king.location)
+            end_turn = move_piece(starting, ending, piece)
           else
             puts 'Your rook cannot move to that spot'
           end
         when '♕'
-          if move_queen_b(starting, ending, board.grid)
-            move_piece(starting, ending, '♕')
-            end_turn = true
+          if move_queen_b(starting, ending, board.grid, black_king.location)
+            end_turn = move_piece(starting, ending, piece)
           else
             puts 'Your queen cannot move to that spot'
           end
         when '♔'
-          if king_move_b(starting, ending, board.grid, true)
-            move_piece(starting, ending, '♔')
+          if king_move_b(starting, ending, board.grid)
+            end_turn = move_piece(starting, ending, piece)
             black_king.location = ending
             black_king.under_check = false
-            end_turn = true
           else
             puts 'Your king cannot move to that spot'
           end
@@ -181,6 +173,14 @@ class Game
         switch_turn if end_turn == true
       end
       raise_input_error = false
+    end
+  end
+
+  def each_square
+    board.grid.each_with_index do |row, y|
+      row.each_with_index do |_square, x|
+        index = [y, x]
+      end
     end
   end
 
@@ -213,6 +213,15 @@ class Game
   def move_piece(starting, ending, piece)
     board.grid[starting[0]][starting[1]] = '.'
     board.grid[ending[0]][ending[1]] = piece
+    true
+  end
+
+  def promote_pawn(ending, piece)
+    if piece == '♙' && ending[0] == 0
+      board.grid[ending[0]][ending[1]] = '♕'
+    elsif piece == '♟︎' && ending[0] == 7
+      board.grid[ending[0]][ending[1]] = '♛'
+    end
   end
 
   def game_over
@@ -238,14 +247,14 @@ class Board
 
   def create_board
     [
-      ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
+      ['♜', '♞', '♝', '♚', '♛', '♝', '♞', '♜'],
       ['♟︎', '♟︎', '♟︎', '♟︎', '♟︎', '♟︎', '♟︎', '♟︎'],
       ['.', '.', '.', '.', '.', '.', '.', '.'],
       ['.', '.', '.', '.', '.', '.', '.', '.'],
       ['.', '.', '.', '.', '.', '.', '.', '.'],
       ['.', '.', '.', '.', '.', '.', '.', '.'],
       ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
-      ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖']
+      ['♖', '♘', '♗', '♔', '♕', '♗', '♘', '♖']
     ]
 
     #  [
@@ -261,8 +270,8 @@ class Board
 
     # [
     #  ['.', '.', '.', '.', '♚', '.', '.', '.'],
-    #  ['.', '.', '.', '.', '♟︎', '.', '.', '.'],
-    #  ['.', '.', '.', '.', '.', '♕', '.', '.'],
+    #  ['.', '.', '.', '.', '♛', '.', '.', '.'],
+    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
     #  ['.', '.', '.', '.', '.', '.', '.', '.'],
     #  ['.', '.', '.', '.', '.', '.', '.', '.'],
     #  ['.', '.', '.', '.', '.', '.', '.', '.'],

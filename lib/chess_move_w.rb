@@ -2,12 +2,12 @@
 
 require_relative '../lib/chess_move_b'
 
-def king_move_w(starting, ending, grid, _check_if_opponent_is_checked)
+def king_move_w(starting, ending, grid)
   original_board = grid.map(&:dup)
   temp_board = hypothetical_board_w(starting, ending, original_board, '♚')
 
-  currently_under_check = under_check_w?(original_board, starting, false)
-  will_be_under_check = under_check_w?(temp_board, ending, false)
+  currently_under_check = under_check_w?(original_board, starting)
+  will_be_under_check = under_check_w?(temp_board, ending)
 
   return true if valid_king_move_w(starting, original_board).include?(ending) && will_be_under_check == false
 
@@ -27,7 +27,7 @@ def valid_king_move_w(pointer, grid, valid_moves = [])
   valid_moves
 end
 
-def print_temp_w(grid)
+def print_temp(grid)
   more_temp_grid = grid
   i = 0
   until i > 7
@@ -36,6 +36,7 @@ def print_temp_w(grid)
 
     i += 1
   end
+  puts ''
 end
 
 def king_axes_w(pointer, grid, x, y)
@@ -46,22 +47,22 @@ def king_axes_w(pointer, grid, x, y)
   valid_moves
 end
 
-def under_check_w?(grid, king_location_w, _check_if_opponent_is_checked)
+def under_check_w?(grid, king_location_w)
   grid.each_with_index do |row, y|
     row.each_with_index do |square, x|
       index = [y, x]
       case square
       when '.'
       when '♙'
-        return true if move_pawn_b(index, king_location_w, grid)
+        return true if valid_pawn_move_b(index, grid).include?(king_location_w)
       when '♘'
-        return true if move_knight_b(index, king_location_w, grid)
+        return true if valid_knight_move_b(index, grid).include?(king_location_w)
       when '♗'
-        return true if move_bishop_b(index, king_location_w, grid)
+        return true if valid_bishop_move_b(index, grid).include?(king_location_w)
       when '♖'
-        return true if move_rook_b(index, king_location_w, grid)
+        return true if valid_rook_move_b(index, grid).include?(king_location_w)
       when '♕'
-        return true if move_queen_b(index, king_location_w, grid)
+        return true if valid_queen_move_b(index, grid).include?(king_location_w)
       when '♔'
         return true if valid_king_move_b(index, grid).include?(king_location_w)
       end
@@ -98,7 +99,7 @@ def under_checkmate_w?(grid, king_location_w)
         end
       when '♚'
         valid_king_move_w(index, grid).each do |possible_king_move|
-          return false if king_move_w(index, possible_king_move, grid, false) == true
+          return false if king_move_w(index, possible_king_move, grid) == true
         end
       end
     end
@@ -109,7 +110,7 @@ end
 
 def saveable_move_w?(grid, king_location, index, possible_move, square)
   temp_grid = hypothetical_board_w(index, possible_move, grid, square)
-  true if under_check_w?(temp_grid, king_location, false) == false
+  true if under_check_w?(temp_grid, king_location) == false
 end
 
 def hypothetical_board_w(starting, ending, grid, piece)
@@ -122,7 +123,7 @@ end
 def move_queen_w(starting, ending, grid, king_location = ending)
   temp_grid = hypothetical_board_w(starting, ending, grid, '♛')
   return true if valid_queen_move_w(starting,
-                                    grid).include?(ending) && under_check_w?(temp_grid, king_location, false) == false
+                                    grid).include?(ending) && under_check_w?(temp_grid, king_location) == false
 
   false
 end
@@ -143,7 +144,7 @@ end
 def move_rook_w(starting, ending, grid, king_location = ending)
   temp_grid = hypothetical_board_w(starting, ending, grid, '♜')
   return true if valid_rook_move_w(starting,
-                                   grid).include?(ending) && under_check_w?(temp_grid, king_location, false) == false
+                                   grid).include?(ending) && under_check_w?(temp_grid, king_location) == false
 
   false
 end
@@ -160,7 +161,7 @@ end
 def move_bishop_w(starting, ending, grid, king_location = ending)
   temp_grid = hypothetical_board_w(starting, ending, grid, '♝')
   return true if valid_bishop_move_w(starting,
-                                     grid).include?(ending) && under_check_w?(temp_grid, king_location, false) == false
+                                     grid).include?(ending) && under_check_w?(temp_grid, king_location) == false
 
   false
 end
@@ -197,7 +198,7 @@ end
 def move_knight_w(starting, ending, grid, king_location = ending)
   temp_grid = hypothetical_board_w(starting, ending, grid, '♞')
   return true if valid_knight_move_w(starting,
-                                     grid).include?(ending) && under_check_w?(temp_grid, king_location, false) == false
+                                     grid).include?(ending) && under_check_w?(temp_grid, king_location) == false
 
   false
 end
@@ -234,7 +235,7 @@ end
 def move_pawn_w(starting, ending, grid, king_location = ending)
   temp_grid = hypothetical_board_w(starting, ending, grid, '♟︎')
   return true if valid_pawn_move_w(starting,
-                                   grid).include?(ending) && under_check_w?(temp_grid, king_location, false) == false
+                                   grid).include?(ending) && under_check_w?(temp_grid, king_location) == false
 
   false
 end
