@@ -35,7 +35,6 @@ class Game
   end
 
   def take_turn_w
-    turn = 'white'
     end_turn = false
     if under_check_w?(board.grid, white_king.location)
       white_king.under_check = true
@@ -45,6 +44,8 @@ class Game
     end
     until end_turn == true
       white_input = take_input
+      return white_input if %w[save load].include?(white_input)
+
       begin
         starting = coord_to_index(white_input[0])
         ending = coord_to_index(white_input[1])
@@ -107,7 +108,6 @@ class Game
   end
 
   def take_turn_b
-    turn = 'black'
     end_turn = false
     if under_check_b?(board.grid, black_king.location)
       black_king.under_check = true
@@ -117,6 +117,8 @@ class Game
     end
     until end_turn == true
       black_input = take_input
+      return black_input if %w[save load].include?(black_input)
+
       begin
         starting = coord_to_index(black_input[0])
         ending = coord_to_index(black_input[1])
@@ -175,14 +177,7 @@ class Game
         switch_turn if end_turn == true
       end
       raise_input_error = false
-    end
-  end
 
-  def each_square
-    board.grid.each_with_index do |row, y|
-      row.each_with_index do |_square, x|
-        index = [y, x]
-      end
     end
   end
 
@@ -196,19 +191,26 @@ class Game
     white_king.under_check = false
   end
 
+  def user_prompted_load_or_save?(input)
+    return true if input.to_s.downcase == 'save' || input.to_s.downcase == 'load'
+
+    false
+  end
+
   def take_input
     print "\n#{@turn.capitalize}'s turn: "
-    user_input = gets.chomp.upcase
-    valid_input?(user_input)
+    user_input = gets.chomp.downcase
+    unless %w[save load].include?(user_input)
+      valid_input?(user_input)
 
-    user_input.split
+      return user_input.split
+    end
+    user_input
   end
 
   def valid_input?(input)
-    raise_input_error = false
     return true if input.length == 5
 
-    raise_input_error = true
     false
   end
 
@@ -276,9 +278,6 @@ class Board
     @vertical_margin = (1..8).to_a.reverse
     @horizontal_margin = ('a'..'h').to_a
     @grid = create_board
-
-    create_pieces_b
-    create_pieces_w
   end
 
   def create_board
@@ -292,45 +291,5 @@ class Board
       ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
       ['♖', '♘', '♗', '♔', '♕', '♗', '♘', '♖']
     ]
-
-    #  [
-    #  ['.', '.', '.', '.', '.', '.', '♞', '.'],
-    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #  ['.', '♟︎', '.', '♟︎', '.', '.', '.', '.'],
-    #  ['♟', '.', '.', '.', '♟︎', '.', '.', '.'],
-    #  ['.', '.', '♞', '.', '.', '.', '.', '.'],
-    #  ['.', '.', '.', '.', '♟︎', '.', '♙', '♙'],
-    #  ['.', '♞', '.', '♕', '♔', '♗', '♘', '♖']
-    #  ]
-
-    # [
-    #  ['.', '.', '.', '.', '♚', '.', '.', '.'],
-    #  ['.', '.', '.', '.', '♛', '.', '.', '.'],
-    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #  ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #  ['.', '.', '.', '.', '♕', '.', '.', '.'],
-    #  ['.', '.', '.', '.', '♔', '.', '.', '.']
-    # ]
-  end
-
-  def create_pieces_b
-    @pawn_b = '♙'
-    @knight_b = '♘'
-    @bishop_b = '♗'
-    @rook_b = '♖'
-    @queen_b = '♕'
-    @king_b = '♔'
-  end
-
-  def create_pieces_w
-    @pawn_w = '♟︎'
-    @knight_w = '♞'
-    @bishop_w = '♝'
-    @rook_w = '♜'
-    @queen_w = '♛'
-    @king_w = '♚'
   end
 end
