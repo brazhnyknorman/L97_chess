@@ -7,7 +7,6 @@ require_relative '../lib/chess_move_w'
 def check_for_save_load(user_input, game)
   if user_input == 'load'
     game.load_game
-    # puts ''
   elsif user_input == 'save'
     game.save_game
   end

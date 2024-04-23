@@ -12,26 +12,8 @@ class Game
     @turn = 'white'
     @end_turn = false
     @raise_input_error = false
-    @white_king = WhiteKing.new([0, 3])
-    @black_king = BlackKing.new([7, 3])
-  end
-
-  class WhiteKing
-    attr_accessor :location, :under_check
-
-    def initialize(starting)
-      @location = starting
-      @under_check = false
-    end
-  end
-
-  class BlackKing
-    attr_accessor :location, :under_check
-
-    def initialize(starting)
-      @location = starting
-      @under_check = false
-    end
+    @white_king = King.new([0, 3])
+    @black_king = King.new([7, 3])
   end
 
   def take_turn_w
@@ -291,5 +273,14 @@ class Board
       ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
       ['♖', '♘', '♗', '♔', '♕', '♗', '♘', '♖']
     ]
+  end
+end
+
+class King
+  attr_accessor :location, :under_check
+
+  def initialize(starting)
+    @location = starting
+    @under_check = false
   end
 end
