@@ -3,8 +3,34 @@
 require_relative '../lib/chess_move_w'
 require_relative '../lib/chess_move_b'
 
+# Methods associated with the white player
+module White
+  def check_status_w
+    return unless under_check_w?(board.grid, white_king.location)
+
+    white_king.under_check = true
+    game_over if under_checkmate_w?(board.grid, white_king.location) == true
+
+    puts "\nYou are under check!"
+  end
+end
+
+# Methods associated with the black player
+module Black
+  def check_status_b
+    return unless under_check_b?(board.grid, black_king.location)
+
+    black_king.under_check = true
+    game_over if under_checkmate_b?(board.grid, black_king.location) == true
+
+    puts "\nYou are under check!"
+  end
+end
+
 # Class that creates and operates a game of chess
 class Game
+  include Black
+  include White
   attr_accessor :board, :turn, :end_turn, :raise_input_error, :white_king, :black_king
 
   def initialize
@@ -18,12 +44,7 @@ class Game
 
   def take_turn_w
     end_turn = false
-    if under_check_w?(board.grid, white_king.location)
-      white_king.under_check = true
-      game_over if under_checkmate_w?(original_board = board.grid(&:dup), white_king.location) == true
-
-      puts "\nYou are under check!"
-    end
+    check_status_w
     until end_turn == true
       white_input = take_input
       return white_input if %w[save load].include?(white_input)
@@ -91,12 +112,7 @@ class Game
 
   def take_turn_b
     end_turn = false
-    if under_check_b?(board.grid, black_king.location)
-      black_king.under_check = true
-      game_over if under_checkmate_b?(original_board = board.grid(&:dup), black_king.location) == true
-
-      puts "\nYou are under check!"
-    end
+    check_status_b
     until end_turn == true
       black_input = take_input
       return black_input if %w[save load].include?(black_input)
