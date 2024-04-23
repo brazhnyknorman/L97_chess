@@ -98,7 +98,6 @@ end
 
 def saveable_move_b?(grid, king_location, index, possible_move, square)
   temp_grid = hypothetical_board_b(index, possible_move, grid, square)
-  # puts "Square: #{square} status: #{under_check_b?(temp_grid, king_location) == false}"
   true if under_check_b?(temp_grid, king_location) == false
 end
 
@@ -106,12 +105,6 @@ def hypothetical_board_b(starting, ending, grid, piece)
   temp_grid = grid.map(&:dup)
   temp_grid[starting[0]][starting[1]] = '.'
   temp_grid[ending[0]][ending[1]] = piece
-  temp_grid
-end
-
-def pin_board(starting, _ending, grid, _piece)
-  temp_grid = grid.map(&:dup)
-  temp_grid[starting[0]][starting[1]] = '.'
   temp_grid
 end
 
